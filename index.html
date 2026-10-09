@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#10233f">
+<title>Calculator Installment | حاسبة الأقساط العقارية</title>
+<style>
+:root{--navy:#10233f;--blue:#2458a6;--blue2:#eaf1ff;--ink:#17243a;--muted:#68768b;--line:#dfe6ef;--bg:#f4f7fb;--white:#fff;--green:#13795b;--red:#b42318}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;line-height:1.5}
+header{background:linear-gradient(135deg,#10233f,#1b467b);color:white;padding:22px 16px 26px;border-radius:0 0 24px 24px}
+.head{max-width:900px;margin:auto;display:flex;align-items:center;gap:12px}.logo{width:48px;height:48px;border-radius:15px;background:#ffffff20;display:grid;place-items:center;font-size:25px;border:1px solid #ffffff38}
+h1{font-size:21px;margin:0 0 3px}header p{margin:0;color:#d7e4f7;font-size:13px}
+main{max-width:900px;margin:16px auto;padding:0 12px 32px}
+.tabs{display:flex;gap:8px;background:#e8edf5;border-radius:14px;padding:5px;margin-bottom:14px}
+.tab{flex:1;border:0;border-radius:10px;padding:11px 8px;background:transparent;color:#53627a;font-weight:700;font-size:14px;cursor:pointer}
+.tab.active{background:white;color:var(--navy);box-shadow:0 2px 8px #142b4b12}
+.panel{background:white;border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:13px;box-shadow:0 5px 20px #1b355508}
+.panel h2{font-size:16px;margin:0 0 14px;display:flex;align-items:center;gap:8px}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.field{min-width:0}.field.full{grid-column:1/-1}label{display:block;font-size:13px;font-weight:700;margin-bottom:6px;color:#34435a}
+.hint{font-size:11px;color:var(--muted);font-weight:400;margin-right:4px}
+.controls{display:flex;gap:6px;align-items:stretch}.controls select,.controls input,.single{width:100%;min-width:0;border:1px solid #d5deea;border-radius:11px;background:#fff;color:var(--ink);padding:11px 10px;font:inherit;font-size:14px;outline:none}
+.controls select{max-width:47%;background:#f8faff}.controls input:focus,.controls select:focus,.single:focus{border-color:var(--blue);box-shadow:0 0 0 3px #2458a615}
+.controls input{flex:1}.single{display:block}
+.summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.metric{background:#f6f8fc;border:1px solid #e5ebf4;border-radius:13px;padding:12px;min-width:0}
+.metric.primary{background:var(--blue2);border-color:#d4e2ff}.metric .name{font-size:12px;color:#5b6a80;margin-bottom:5px}.metric .value{font-weight:800;font-size:18px;overflow-wrap:anywhere;color:var(--navy)}.metric .sub{font-size:11px;color:var(--muted);margin-top:3px}
+.actions{display:flex;flex-direction:column;gap:10px;margin-top:14px}.actions .btn{width:100%;flex:none;min-width:0}.btn{border:0;border-radius:12px;padding:12px 14px;font-size:14px;font-weight:800;cursor:pointer;flex:1;min-width:130px}.btn.primary{background:var(--navy);color:white}.btn.secondary{background:#eaf1ff;color:#1c4d94}.btn.light{background:#f1f4f8;color:#34435a}
+.note{font-size:12px;color:var(--muted);margin:10px 2px 0}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}table{border-collapse:collapse;width:100%;min-width:470px;font-size:13px}th,td{padding:10px;text-align:right;border-bottom:1px solid #e8edf4}th{background:#f4f7fb;color:#526178}tr:last-child td{border-bottom:0}
+.hidden{display:none!important}.error{color:var(--red);font-size:12px;margin-top:8px;display:none}.pill{display:inline-block;border-radius:99px;background:#e7f6ef;color:var(--green);padding:4px 9px;font-size:11px;font-weight:700}
+footer{text-align:center;color:#8290a3;font-size:11px;padding:5px 0 20px}
+@media(min-width:650px){.summary{grid-template-columns:repeat(3,minmax(0,1fr))}.panel{padding:20px}header{padding:28px 20px 32px}h1{font-size:24px}}
+@media(max-width:390px){.fields{grid-template-columns:1fr}.field.full{grid-column:auto}.controls select{max-width:45%}.metric .value{font-size:16px}.panel{padding:13px}}
+@media print{body>*:not(#pdfReport){display:none!important}#pdfReport{position:static!important;left:auto!important;top:auto!important;width:100%!important;max-width:100%!important;margin:0!important;padding:12px!important;box-shadow:none!important}body{background:white}header{border-radius:0;padding:12px 0;background:#10233f!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}main{padding:0;margin:10px auto}.tabs,.actions,.no-print,footer{display:none!important}.panel{box-shadow:none;break-inside:avoid;padding:12px}.panel:not(.print-show){display:none!important}#resultsPanel,#schedulePanel{display:block!important}.summary{grid-template-columns:repeat(3,minmax(0,1fr))}.metric{break-inside:avoid}}
+</style>
+
+</head>
+<body>
+<header><div class="head"><div class="logo">▦</div><div style="flex:1"><h1>Calculator Installment</h1><p id="tagline">حاسبة الأقساط العقارية — حساب واضح في ثواني</p></div><select id="language" aria-label="Language" style="width:auto;max-width:125px;border:1px solid #ffffff55;border-radius:10px;padding:9px;background:#ffffff15;color:#fff;font:inherit;font-size:13px"><option value="ar">العربية</option><option value="en">English</option><option value="fr">Français</option></select></div></header>
+<main>
+  <div class="tabs no-print" role="tablist">
+    <button class="tab active" data-tab="calculator" id="tabCalculator">🧮 إدخال البيانات</button>
+    <button class="tab" data-tab="results" id="tabResults">📊 السعر والخصم</button>
+    <button class="tab" data-tab="schedule" id="tabSchedule">📅 جدول السداد</button>
+  </div>
+
+  <section class="panel" id="calculatorPanel">
+    <h2 id="unitHeading">🏠 بيانات الوحدة</h2>
+    <div class="fields">
+      <div class="field full">
+        <label for="pricePreset" id="priceLabel">سعر الوحدة <span class="hint" id="priceHint">اختار سعر أو اكتبه يدويًا</span></label>
+        <div class="controls"><select id="pricePreset" aria-label="اختيار سعر جاهز">
+          <option value="">✦ سعر مخصص</option>
+          <option value="5000000">5 مليون</option><option value="10000000">10 مليون</option>
+          <option value="15000000">15 مليون</option><option value="20000000">20 مليون</option>
+          <option value="30000000">30 مليون</option><option value="40000000">40 مليون</option>
+          <option value="50000000">50 مليون</option><option value="60000000">60 مليون</option>
+          <option value="70000000">70 مليون</option><option value="80000000">80 مليون</option>
+          <option value="90000000">90 مليون</option><option value="100000000">100 مليون</option>
+          <option value="150000000">150 مليون</option><option value="200000000">200 مليون</option>
+          <option value="250000000">250 مليون</option><option value="300000000">300 مليون</option>
+          <option value="400000000">400 مليون</option><option value="500000000">500 مليون</option>
+          <option value="600000000">600 مليون</option><option value="700000000">700 مليون</option>
+          <option value="800000000">800 مليون</option><option value="900000000">900 مليون</option>
+          <option value="1000000000">مليار جنيه</option>
+        </select><input id="price" type="text" value="10,000,000" inputmode="numeric" autocomplete="off" placeholder="10,000,000"></div>
+      </div>
+      <div class="field">
+        <label for="dpPreset" id="dpLabel">نسبة المقدم</label>
+        <div class="controls"><select id="dpPreset"><option value="">✦ مخصص</option><option value="0">0%</option><option value="0.5">0,5%</option><option value="1">1,0%</option><option value="1.5">1,5%</option><option value="2">2,0%</option><option value="2.5">2,5%</option><option value="3">3,0%</option><option value="3.5">3,5%</option><option value="4">4,0%</option><option value="4.5">4,5%</option><option value="5">5,0%</option><option value="5.5">5,5%</option><option value="6">6,0%</option><option value="6.5">6,5%</option><option value="7">7,0%</option><option value="7.5">7,5%</option><option value="8">8,0%</option><option value="8.5">8,5%</option><option value="9">9,0%</option><option value="9.5">9,5%</option><option value="10" selected>10,0%</option><option value="10.5">10,5%</option><option value="11">11,0%</option><option value="11.5">11,5%</option><option value="12">12,0%</option><option value="12.5">12,5%</option><option value="13">13,0%</option><option value="13.5">13,5%</option><option value="14">14,0%</option><option value="14.5">14,5%</option><option value="15">15,0%</option><option value="15.5">15,5%</option><option value="16">16,0%</option><option value="16.5">16,5%</option><option value="17">17,0%</option><option value="17.5">17,5%</option><option value="18">18,0%</option><option value="18.5">18,5%</option><option value="19">19,0%</option><option value="19.5">19,5%</option><option value="20">20,0%</option><option value="20.5">20,5%</option><option value="21">21,0%</option><option value="21.5">21,5%</option><option value="22">22,0%</option><option value="22.5">22,5%</option><option value="23">23,0%</option><option value="23.5">23,5%</option><option value="24">24,0%</option><option value="24.5">24,5%</option><option value="25">25,0%</option><option value="25.5">25,5%</option><option value="26">26,0%</option><option value="26.5">26,5%</option><option value="27">27,0%</option><option value="27.5">27,5%</option><option value="28">28,0%</option><option value="28.5">28,5%</option><option value="29">29,0%</option><option value="29.5">29,5%</option><option value="30">30,0%</option><option value="30.5">30,5%</option><option value="31">31,0%</option><option value="31.5">31,5%</option><option value="32">32,0%</option><option value="32.5">32,5%</option><option value="33">33,0%</option><option value="33.5">33,5%</option><option value="34">34,0%</option><option value="34.5">34,5%</option><option value="35">35,0%</option><option value="35.5">35,5%</option><option value="36">36,0%</option><option value="36.5">36,5%</option><option value="37">37,0%</option><option value="37.5">37,5%</option><option value="38">38,0%</option><option value="38.5">38,5%</option><option value="39">39,0%</option><option value="39.5">39,5%</option><option value="40">40,0%</option><option value="40.5">40,5%</option><option value="41">41,0%</option><option value="41.5">41,5%</option><option value="42">42,0%</option><option value="42.5">42,5%</option><option value="43">43,0%</option><option value="43.5">43,5%</option><option value="44">44,0%</option><option value="44.5">44,5%</option><option value="45">45,0%</option><option value="45.5">45,5%</option><option value="46">46,0%</option><option value="46.5">46,5%</option><option value="47">47,0%</option><option value="47.5">47,5%</option><option value="48">48,0%</option><option value="48.5">48,5%</option><option value="49">49,0%</option><option value="49.5">49,5%</option><option value="50">50,0%</option></select><input id="dp" type="number" min="0" max="50" step="0.5" value="10" inputmode="decimal" aria-label="نسبة المقدم يدويًا"></div>
+      </div>
+      <div class="field">
+        <label for="discountPreset" id="discountLabel">نسبة الخصم</label>
+        <div class="controls"><select id="discountPreset"><option value="">✦ مخصص</option><option value="0" selected>0%</option><option value="0.5">0,5%</option><option value="1">1,0%</option><option value="1.5">1,5%</option><option value="2">2,0%</option><option value="2.5">2,5%</option><option value="3">3,0%</option><option value="3.5">3,5%</option><option value="4">4,0%</option><option value="4.5">4,5%</option><option value="5">5,0%</option><option value="5.5">5,5%</option><option value="6">6,0%</option><option value="6.5">6,5%</option><option value="7">7,0%</option><option value="7.5">7,5%</option><option value="8">8,0%</option><option value="8.5">8,5%</option><option value="9">9,0%</option><option value="9.5">9,5%</option><option value="10">10,0%</option><option value="10.5">10,5%</option><option value="11">11,0%</option><option value="11.5">11,5%</option><option value="12">12,0%</option><option value="12.5">12,5%</option><option value="13">13,0%</option><option value="13.5">13,5%</option><option value="14">14,0%</option><option value="14.5">14,5%</option><option value="15">15,0%</option><option value="15.5">15,5%</option><option value="16">16,0%</option><option value="16.5">16,5%</option><option value="17">17,0%</option><option value="17.5">17,5%</option><option value="18">18,0%</option><option value="18.5">18,5%</option><option value="19">19,0%</option><option value="19.5">19,5%</option><option value="20">20,0%</option><option value="20.5">20,5%</option><option value="21">21,0%</option><option value="21.5">21,5%</option><option value="22">22,0%</option><option value="22.5">22,5%</option><option value="23">23,0%</option><option value="23.5">23,5%</option><option value="24">24,0%</option><option value="24.5">24,5%</option><option value="25">25,0%</option><option value="25.5">25,5%</option><option value="26">26,0%</option><option value="26.5">26,5%</option><option value="27">27,0%</option><option value="27.5">27,5%</option><option value="28">28,0%</option><option value="28.5">28,5%</option><option value="29">29,0%</option><option value="29.5">29,5%</option><option value="30">30,0%</option><option value="30.5">30,5%</option><option value="31">31,0%</option><option value="31.5">31,5%</option><option value="32">32,0%</option><option value="32.5">32,5%</option><option value="33">33,0%</option><option value="33.5">33,5%</option><option value="34">34,0%</option><option value="34.5">34,5%</option><option value="35">35,0%</option><option value="35.5">35,5%</option><option value="36">36,0%</option><option value="36.5">36,5%</option><option value="37">37,0%</option><option value="37.5">37,5%</option><option value="38">38,0%</option><option value="38.5">38,5%</option><option value="39">39,0%</option><option value="39.5">39,5%</option><option value="40">40,0%</option><option value="40.5">40,5%</option><option value="41">41,0%</option><option value="41.5">41,5%</option><option value="42">42,0%</option><option value="42.5">42,5%</option><option value="43">43,0%</option><option value="43.5">43,5%</option><option value="44">44,0%</option><option value="44.5">44,5%</option><option value="45">45,0%</option><option value="45.5">45,5%</option><option value="46">46,0%</option><option value="46.5">46,5%</option><option value="47">47,0%</option><option value="47.5">47,5%</option><option value="48">48,0%</option><option value="48.5">48,5%</option><option value="49">49,0%</option><option value="49.5">49,5%</option><option value="50">50,0%</option></select><input id="discount" type="number" min="0" max="100" step="0.5" value="0" inputmode="decimal" aria-label="نسبة الخصم يدويًا"></div>
+      </div>
+      <div class="field">
+        <label for="years" id="yearsLabel">مدة التقسيط</label>
+        <div class="controls"><select id="yearsPreset"><option value="">✦ مخصص</option><option value="4">4 سنين</option><option value="5">5 سنين</option><option value="6">6 سنين</option><option value="7">7 سنين</option><option value="8" selected>8 سنين</option><option value="9">9 سنين</option><option value="10">10 سنين</option><option value="12">12 سنة</option><option value="15">15 سنة</option></select><input id="years" type="number" min="1" max="40" step="1" value="8" inputmode="numeric" aria-label="مدة التقسيط يدويًا"></div>
+      </div>
+      <div class="field">
+        <label for="frequency" id="frequencyLabel">دورية القسط</label>
+        <select id="frequency" class="single"><option value="4">كل 3 شهور (ربع سنوي)</option><option value="2">كل 6 شهور (نصف سنوي)</option><option value="1">كل سنة (سنوي)</option></select>
+      </div>
+    </div>
+    <div class="error" id="error"></div>
+    <div class="actions no-print"><button class="btn primary" id="calculate">⚡ <span id="calculateText">احسب الأقساط</span></button><button class="btn light" id="reset">↺ <span id="resetText">إعادة ضبط</span></button></div>
+    <p class="note" id="calculationNote">الحساب يفترض تطبيق الخصم أولًا على سعر الوحدة، ثم حساب المقدم من السعر بعد الخصم، وتقسيم المتبقي بالتساوي على مدة التقسيط.</p>
+  </section>
+
+  <section class="panel" id="resultsPanel">
+    <h2 id="resultsHeading">📊 ملخص السعر والسداد <span class="pill" id="livePill">تحديث تلقائي</span></h2>
+    <div class="summary">
+      <div class="metric"><div class="name" id="originalLabel">سعر الوحدة الأصلي</div><div class="value" id="rOriginal">—</div><div class="sub" id="currencySub">جنيه مصري</div></div>
+      <div class="metric"><div class="name" id="discountValueLabel">قيمة الخصم</div><div class="value" id="rDiscount">—</div><div class="sub" id="rDiscountSub">0%</div></div>
+      <div class="metric primary"><div class="name" id="netLabel">الإجمالي بعد الخصم</div><div class="value" id="rNet">—</div><div class="sub" id="currencySub">جنيه مصري</div></div>
+      <div class="metric"><div class="name" id="dpValueLabel">المقدم المطلوب</div><div class="value" id="rDp">—</div><div class="sub" id="rDpSub">—</div></div>
+      <div class="metric"><div class="name" id="remainingLabel">المبلغ المتبقي للتقسيط</div><div class="value" id="rRemaining">—</div><div class="sub" id="remainingSub">بعد خصم المقدم</div></div>
+      <div class="metric primary"><div class="name" id="installmentLabel">قيمة كل قسط</div><div class="value" id="rInstallment">—</div><div class="sub" id="rInstallmentSub">—</div></div>
+    </div>
+    <div class="actions no-print"><button class="btn secondary" id="pdf">📄 <span id="pdfText">حفظ / طباعة PDF</span></button><button class="btn primary" id="whatsapp">🟢 <span id="whatsappText">إرسال ملخص واتساب</span></button></div>
+    <p class="note" id="resultsNote">تنبيه: النتائج لا تشمل الصيانة أو رسوم التعاقد أو أي دفعات إضافية غير مدخلة.</p>
+  </section>
+
+  <section class="panel" id="schedulePanel">
+    <h2 id="scheduleHeading">📅 جدول الأقساط</h2>
+    <div class="tablewrap"><table><thead><tr><th id="thNumber">رقم القسط</th><th id="thWhen">موعده النسبي</th><th id="thValue">قيمة القسط</th><th id="thTotal">الإجمالي المدفوع حتىه</th></tr></thead><tbody id="scheduleBody"></tbody></table></div>
+    <p class="note" id="scheduleNote"></p>
+  </section>
+  <footer id="footerText">Smart Pay • حاسبة مساعدة — راجع نظام السداد الرسمي قبل التعاقد</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+let lastSummary='';
+const fmt=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:2,minimumFractionDigits:0}).format(Math.round((n+Number.EPSILON)*100)/100)+(typeof currentLang!=='undefined'&&currentLang==='en'?' EGP':typeof currentLang!=='undefined'&&currentLang==='fr'?' EGP':' ج.م');
+const num=id=>Number(String($(id).value).replace(/,/g,'').trim());
+function formatPriceInput(){const el=$('price');const raw=el.value;const start=el.selectionStart??raw.length;const digitsBefore=raw.slice(0,start).replace(/[^0-9]/g,'').length;const digits=raw.replace(/[^0-9]/g,'');const formatted=digits?Number(digits).toLocaleString('en-US',{maximumFractionDigits:0}):'';el.value=formatted;let pos=0,count=0;while(pos<formatted.length&&count<digitsBefore){if(/[0-9]/.test(formatted[pos]))count++;pos++;}try{el.setSelectionRange(pos,pos)}catch(e){}}
+$('price').addEventListener('input',formatPriceInput);
+$('price').addEventListener('blur',()=>{if($('price').value) $('price').value=num('price').toLocaleString('en-US',{maximumFractionDigits:0});});
+function syncPreset(preset,input){$(preset).addEventListener('change',()=>{if($(preset).value!==''){$(input).value=$(preset).value;if(input==='price')formatPriceInput();calculate()}});$(input).addEventListener('input',()=>{if($(preset).value!==String($(input).value).replace(/,/g,''))$(preset).value='';calculate()})}
+syncPreset('pricePreset','price');syncPreset('dpPreset','dp');syncPreset('discountPreset','discount');syncPreset('yearsPreset','years');
+$('frequency').addEventListener('change',calculate);
+function calculate(){
+ const price=num('price'),dpPct=num('dp'),discPct=num('discount'),years=num('years'),freq=num('frequency');
+ const err=$('error');
+ if(!Number.isFinite(price)||price<=0||!Number.isFinite(dpPct)||dpPct<0||dpPct>50||!Number.isFinite(discPct)||discPct<0||discPct>100||!Number.isFinite(years)||years<1||years>40){
+   err.textContent='راجع البيانات: السعر أكبر من صفر، المقدم من 0% إلى 50%، والخصم من 0% إلى 100%، والمدة من سنة إلى 40 سنة.';err.style.display='block';return;
+ }
+ err.style.display='none';
+ const discount=price*discPct/100,net=price-discount,dp=net*dpPct/100,remaining=net-dp,count=Math.round(years*freq),installment=count?remaining/count:0;
+ $('rOriginal').textContent=fmt(price);$('rDiscount').textContent=fmt(discount);$('rDiscountSub').textContent=discPct+'% من السعر الأصلي';
+ $('rNet').textContent=fmt(net);$('rDp').textContent=fmt(dp);$('rDpSub').textContent=dpPct+'% من الإجمالي بعد الخصم';
+ $('rRemaining').textContent=fmt(remaining);$('rInstallment').textContent=fmt(installment);
+ const freqText=freq===4?'كل 3 شهور':freq===2?'كل 6 شهور':'كل سنة';
+ $('rInstallmentSub').textContent=count+' قسط • '+freqText;
+ const body=$('scheduleBody');body.innerHTML='';let paid=dp;
+ for(let i=1;i<=count;i++){
+  paid+=installment;const tr=document.createElement('tr');
+  const vals=[i,freq===4?'بعد '+(i*3)+' شهر':freq===2?'بعد '+(i*6)+' شهر':'بعد '+i+' سنة',fmt(installment),fmt(Math.min(paid,net))];
+  vals.forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.appendChild(td)});body.appendChild(tr);
+ }
+ $('scheduleNote').textContent='عدد الأقساط: '+count+' • المقدم + إجمالي الأقساط = '+fmt(net)+'. مواعيد الجدول نسبية وليست تواريخ تعاقد فعلية.';
+ lastSummary=`Calculator Installment - ملخص حساب الوحدة\nسعر الوحدة: ${fmt(price)}\nالخصم: ${discPct}% (${fmt(discount)})\nالإجمالي بعد الخصم: ${fmt(net)}\nالمقدم: ${dpPct}% = ${fmt(dp)}\nالمتبقي للتقسيط: ${fmt(remaining)}\nنظام السداد: ${freqText} لمدة ${years} سنة\nعدد الأقساط: ${count}\nقيمة القسط الواحد: ${fmt(installment)}\n*الحساب تقديري ولا يشمل الصيانة أو الرسوم أو الدفعات الإضافية.*`;
+}
+$('calculate').addEventListener('click',()=>{calculate();document.querySelector('[data-tab="results"]').click()});
+$('reset').addEventListener('click',()=>{$('pricePreset').value='10000000';$('price').value='10,000,000';$('dpPreset').value='10';$('dp').value=10;$('discountPreset').value='0';$('discount').value=0;$('yearsPreset').value='8';$('years').value=8;$('frequency').value='4';calculate()});
+document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{
+ document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b===btn));
+ const target=btn.dataset.tab;
+ $('calculatorPanel').classList.toggle('hidden',target!=='calculator');
+ $('resultsPanel').classList.toggle('hidden',target!=='results');
+ $('schedulePanel').classList.toggle('hidden',target!=='schedule');
+}));
+function buildPdfReport(){
+ calculate();
+ const t=translations[currentLang];
+ const report=document.createElement('div');
+ report.id='pdfReport';
+ report.dir=t.dir;
+ report.style.cssText='position:fixed;left:0;top:0;width:760px;max-width:none;padding:28px;background:#fff;color:#17243a;font-family:Arial,Tahoma,sans-serif;line-height:1.55;direction:'+t.dir+';z-index:2147483000;box-sizing:border-box;overflow:visible;';
+ const price=num('price'),dpPct=num('dp'),discPct=num('discount'),years=num('years'),freq=num('frequency');
+ const discount=price*discPct/100,net=price-discount,dp=net*dpPct/100,remaining=net-dp,count=Math.round(years*freq),installment=count?remaining/count:0;
+ const labels=currentLang==='ar'
+  ?{title:'ملخص حساب الوحدة العقارية',original:'سعر الوحدة الأصلي',discount:'قيمة الخصم',net:'الإجمالي بعد الخصم',dp:'المقدم',remaining:'المتبقي للتقسيط',term:'مدة التقسيط',frequency:'دورية القسط',count:'عدد الأقساط',installment:'قيمة القسط',schedule:'جدول السداد',no:'رقم القسط',when:'موعده النسبي',amount:'قيمة القسط',paid:'الإجمالي المدفوع تراكميًا',customer:'اسم العميل',project:'اسم المشروع'}
+  :currentLang==='fr'
+  ?{title:'Résumé du paiement immobilier',original:'Prix initial du bien',discount:'Montant de la remise',net:'Total après remise',dp:'Apport initial',remaining:'Solde restant',term:'Durée',frequency:'Fréquence',count:'Nombre d’échéances',installment:'Montant par échéance',schedule:'Échéancier',no:'N°',when:'Échéance relative',amount:'Montant',paid:'Total cumulé payé',customer:'Nom du client',project:'Nom du projet'}
+  :{title:'Property Payment Summary',original:'Original Unit Price',discount:'Discount Amount',net:'Total After Discount',dp:'Down Payment',remaining:'Remaining Balance',term:'Installment Term',frequency:'Payment Frequency',count:'Number of Installments',installment:'Each Installment',schedule:'Payment Schedule',no:'No.',when:'Relative Due Time',amount:'Installment Amount',paid:'Cumulative Amount Paid',customer:'Customer Name',project:'Project Name'};
+ const freqText=freq===4?t.quarterly:freq===2?t.halfyear:t.yearly;
+ report.innerHTML=`
+ <div style="border-bottom:3px solid #2458a6;padding-bottom:14px;margin-bottom:18px">
+  <div style="font-size:13px;color:#2458a6;font-weight:bold">SMART PAY</div>
+  <h1 style="font-size:24px;margin:5px 0">${labels.title}</h1>
+  <div style="font-size:12px;color:#68768b">${new Date().toLocaleDateString(currentLang==='ar'?'ar-EG':currentLang==='fr'?'fr-FR':'en-GB')}</div>
+ </div>
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
+ ${[[labels.original,fmt(price)],[labels.discount,discPct+'% — '+fmt(discount)],[labels.net,fmt(net)],[labels.dp,dpPct+'% — '+fmt(dp)],[labels.remaining,fmt(remaining)],[labels.term,years+(currentLang==='ar'?' سنة':' years')],[labels.frequency,freqText],[labels.count,String(count)],[labels.installment,fmt(installment)]].map(([k,v],i)=>`<div style="border:1px solid #dfe6ef;border-radius:8px;padding:10px;${i===2||i===8?'background:#eaf1ff;border-color:#c8d9ff;':''}"><div style="font-size:11px;color:#68768b">${k}</div><div style="font-size:15px;font-weight:bold;margin-top:3px">${v}</div></div>`).join('')}
+ </div>
+ <h2 style="font-size:17px;margin:12px 0">${labels.schedule}</h2>
+ <table style="width:100%;border-collapse:collapse;font-size:10px"><thead><tr>${[labels.no,labels.when,labels.amount,labels.paid].map(x=>`<th style="text-align:${t.dir==='rtl'?'right':'left'};background:#f0f4fa;border:1px solid #dfe6ef;padding:7px">${x}</th>`).join('')}</tr></thead>
+ <tbody>${Array.from($('scheduleBody').rows).map(row=>`<tr>${Array.from(row.cells).map(cell=>`<td style="border:1px solid #dfe6ef;padding:6px">${cell.textContent}</td>`).join('')}</tr>`).join('')}</tbody></table>
+ <p style="font-size:10px;color:#68768b;margin-top:16px">${currentLang==='ar'?'حساب تقديري لا يشمل الصيانة أو الرسوم أو الدفعات الإضافية. راجع جدول السداد الرسمي قبل التعاقد.':currentLang==='fr'?'Estimation hors frais d’entretien, frais de contrat et paiements supplémentaires. Vérifiez le plan officiel avant de signer.':'Estimate excludes maintenance, contract fees and additional payments. Verify the official payment plan before contracting.'}</p>`;
+ document.body.appendChild(report);
+ return report;
+}
+function openPdfPrint(){
+ const report=buildPdfReport();
+ document.body.classList.add('printing-report');
+ const cleanup=()=>{document.body.classList.remove('printing-report');if(report.isConnected)report.remove();window.removeEventListener('afterprint',cleanup);};
+ window.addEventListener('afterprint',cleanup,{once:true});
+ setTimeout(()=>{window.print();},250);
+}
+$('pdf').addEventListener('click',()=>{
+ try{openPdfPrint();}
+ catch(e){alert(currentLang==='ar'?'تعذر فتح نافذة حفظ PDF. افتح الملف في Safari ثم جرّب مرة أخرى.':currentLang==='fr'?'Impossible d’ouvrir la fenêtre PDF. Ouvrez le fichier dans Safari et réessayez.':'Could not open PDF print dialog. Open the file in Safari and try again.');}
+});
+$('whatsapp').addEventListener('click',()=>{
+ calculate();
+ if($('error').textContent){alert($('error').textContent);return;}
+ try{
+  openPdfPrint();
+  setTimeout(()=>{
+   alert(currentLang==='ar'
+    ?'احفظ التقرير كـ PDF في تطبيق Files، ثم افتح واتساب وأرفقه كمستند في محادثة العميل. زر المتصفح لا يستطيع إرسال الملف للعميل تلقائيًا.'
+    :currentLang==='fr'
+    ?'Enregistrez le rapport PDF dans Fichiers, puis joignez-le comme document dans WhatsApp.'
+    :'Save the report as a PDF in Files, then attach it as a document in the customer WhatsApp chat.');
+  },500);
+ }catch(e){
+  alert(currentLang==='ar'?'تعذر فتح نافذة PDF. افتح الملف في Safari ثم أعد المحاولة.':'Could not open PDF. Open this file in Safari and try again.');
+ }
+});
+
+const translations = {
+ ar: {
+  dir:'rtl', tagline:'حاسبة الأقساط العقارية — حساب واضح في ثواني',
+  tabCalculator:'🧮 إدخال البيانات',tabResults:'📊 السعر والخصم',tabSchedule:'📅 جدول السداد',
+  unitHeading:'🏠 بيانات الوحدة',priceLabel:'سعر الوحدة',priceHint:'اختار سعر أو اكتبه يدويًا',
+  dpLabel:'نسبة المقدم',discountLabel:'نسبة الخصم',yearsLabel:'مدة التقسيط',frequencyLabel:'دورية القسط',
+  calculateText:'احسب الأقساط',resetText:'إعادة ضبط',
+  calculationNote:'الحساب يفترض تطبيق الخصم أولًا على سعر الوحدة، ثم حساب المقدم من السعر بعد الخصم، وتقسيم المتبقي بالتساوي على مدة التقسيط.',
+  resultsHeading:'📊 ملخص السعر والسداد',livePill:'تحديث تلقائي',originalLabel:'سعر الوحدة الأصلي',
+  currencySub:'جنيه مصري',discountValueLabel:'قيمة الخصم',netLabel:'الإجمالي بعد الخصم',
+  dpValueLabel:'المقدم المطلوب',remainingLabel:'المبلغ المتبقي للتقسيط',remainingSub:'بعد خصم المقدم',
+  installmentLabel:'قيمة كل قسط',pdfText:'حفظ / طباعة PDF',whatsappText:'تجهيز PDF لإرساله على واتساب',
+  resultsNote:'تنبيه: النتائج لا تشمل الصيانة أو رسوم التعاقد أو أي دفعات إضافية غير مدخلة.',
+  scheduleHeading:'📅 جدول الأقساط',thNumber:'رقم القسط',thWhen:'موعده النسبي',
+  thValue:'قيمة القسط',thTotal:'الإجمالي المدفوع حتىه',
+  footerText:'Smart Pay • حاسبة مساعدة — راجع نظام السداد الرسمي قبل التعاقد',
+  custom:'✦ مخصص',million:'مليون',billion:'مليار جنيه',
+  freqQuarter:'كل 3 شهور (ربع سنوي)',freqHalf:'كل 6 شهور (نصف سنوي)',freqYear:'كل سنة (سنوي)',
+  error:'راجع البيانات: السعر أكبر من صفر، المقدم من 0% إلى 50%، والخصم من 0% إلى 100%، والمدة من سنة إلى 40 سنة.', discountBasis:'من السعر الأصلي', dpBasis:'من الإجمالي بعد الخصم', installmentUnit:'قسط',
+  afterMonth:'بعد {n} شهر',afterYear:'بعد {n} سنة',count:'عدد الأقساط: {n}',each:'قسط',
+  quarterly:'كل 3 شهور',halfyear:'كل 6 شهور',yearly:'كل سنة',
+  scheduleNote:'عدد الأقساط: {count} • المقدم + إجمالي الأقساط = {total}. مواعيد الجدول نسبية وليست تواريخ تعاقد فعلية.',
+  shareTitle:'Calculator Installment - ملخص حساب الوحدة',
+  shareText:'سعر الوحدة: {price}\nالخصم: {pct}% ({discount})\nالإجمالي بعد الخصم: {net}\nالمقدم: {dpPct}% = {dp}\nالمتبقي للتقسيط: {remaining}\nنظام السداد: {freq} لمدة {years} سنة\nعدد الأقساط: {count}\nقيمة القسط الواحد: {installment}\n*الحساب تقديري ولا يشمل الصيانة أو الرسوم أو الدفعات الإضافية.*'
+ },
+ en: {
+  dir:'ltr', tagline:'Real estate installment calculator — clear results in seconds',
+  tabCalculator:'🧮 Enter Details',tabResults:'📊 Price & Discount',tabSchedule:'📅 Payment Schedule',
+  unitHeading:'🏠 Property Details',priceLabel:'Unit Price',priceHint:'Choose a preset or enter manually',
+  dpLabel:'Down Payment',discountLabel:'Discount',yearsLabel:'Installment Term',frequencyLabel:'Payment Frequency',
+  calculateText:'Calculate Payments',resetText:'Reset',
+  calculationNote:'The discount is applied to the original price first. The down payment is calculated on the discounted price, and the remaining balance is divided equally over the term.',
+  resultsHeading:'📊 Price & Payment Summary',livePill:'Live updates',originalLabel:'Original Unit Price',
+  currencySub:'Egyptian Pounds (EGP)',discountValueLabel:'Discount Amount',netLabel:'Total After Discount',
+  dpValueLabel:'Down Payment Amount',remainingLabel:'Remaining Balance',remainingSub:'After down payment',
+  installmentLabel:'Each Installment',pdfText:'Save / Print PDF',whatsappText:'Prepare PDF for WhatsApp',
+  resultsNote:'Note: Results exclude maintenance, contract fees, and any additional payments not entered.',
+  scheduleHeading:'📅 Installment Schedule',thNumber:'Installment No.',thWhen:'Relative Due Time',
+  thValue:'Installment Amount',thTotal:'Cumulative Amount Paid',
+  footerText:'Smart Pay • Planning calculator — verify the official payment plan before contracting',
+  custom:'✦ Custom',million:'million',billion:'EGP 1 billion',
+  freqQuarter:'Every 3 months (quarterly)',freqHalf:'Every 6 months (semiannual)',freqYear:'Every year (annual)',
+  error:'Please check the inputs: price must be above zero, down payment 0–50%, discount 0–100%, and term 1–40 years.', discountBasis:'of original price', dpBasis:'of discounted total', installmentUnit:'installments',
+  afterMonth:'In {n} months',afterYear:'In {n} years',count:'Installments: {n}',each:'installments',
+  quarterly:'Every 3 months',halfyear:'Every 6 months',yearly:'Every year',
+  scheduleNote:'Installments: {count} • Down payment + installments = {total}. Schedule timings are relative, not actual contract dates.',
+  shareTitle:'Calculator Installment - Property Payment Summary',
+  shareText:'Unit price: {price}\nDiscount: {pct}% ({discount})\nTotal after discount: {net}\nDown payment: {dpPct}% = {dp}\nRemaining balance: {remaining}\nPayment plan: {freq} for {years} years\nNumber of installments: {count}\nEach installment: {installment}\n*Estimate excludes maintenance, fees, and additional payments.*'
+ },
+ fr: {
+  dir:'ltr', tagline:'Calculateur de paiements immobiliers — résultats clairs en quelques secondes',
+  tabCalculator:'🧮 Saisie',tabResults:'📊 Prix et remise',tabSchedule:'📅 Échéancier',
+  unitHeading:'🏠 Détails du bien',priceLabel:'Prix du bien',priceHint:'Choisissez un montant ou saisissez-le',
+  dpLabel:'Apport initial',discountLabel:'Remise',yearsLabel:'Durée du paiement',frequencyLabel:'Fréquence des échéances',
+  calculateText:'Calculer les échéances',resetText:'Réinitialiser',
+  calculationNote:'La remise est d’abord appliquée au prix initial. L’apport est calculé sur le prix remisé, puis le solde est réparti également sur la durée.',
+  resultsHeading:'📊 Résumé du prix et des paiements',livePill:'Mise à jour automatique',originalLabel:'Prix initial du bien',
+  currencySub:'Livres égyptiennes (EGP)',discountValueLabel:'Montant de la remise',netLabel:'Total après remise',
+  dpValueLabel:'Montant de l’apport',remainingLabel:'Solde restant à payer',remainingSub:'Après déduction de l’apport',
+  installmentLabel:'Montant de chaque échéance',pdfText:'Enregistrer / Imprimer PDF',whatsappText:'Préparer le PDF pour WhatsApp',
+  resultsNote:'Remarque : les résultats excluent les frais d’entretien, les frais de contrat et tout paiement supplémentaire non saisi.',
+  scheduleHeading:'📅 Échéancier des paiements',thNumber:'N° d’échéance',thWhen:'Échéance relative',
+  thValue:'Montant de l’échéance',thTotal:'Total cumulé payé',
+  footerText:'Smart Pay • Calcul indicatif — vérifiez le plan de paiement officiel avant tout contrat',
+  custom:'✦ Personnalisé',million:'million',billion:'1 milliard EGP',
+  freqQuarter:'Tous les 3 mois (trimestriel)',freqHalf:'Tous les 6 mois (semestriel)',freqYear:'Chaque année (annuel)',
+  error:'Vérifiez les données : prix supérieur à zéro, apport de 0 à 50 %, remise de 0 à 100 %, durée de 1 à 40 ans.', discountBasis:'du prix initial', dpBasis:'du total après remise', installmentUnit:'échéances',
+  afterMonth:'Dans {n} mois',afterYear:'Dans {n} ans',count:'Nombre d’échéances : {n}',each:'échéances',
+  quarterly:'Tous les 3 mois',halfyear:'Tous les 6 mois',yearly:'Chaque année',
+  scheduleNote:'Nombre d’échéances : {count} • Apport + échéances = {total}. Les délais sont relatifs, pas des dates contractuelles.',
+  shareTitle:'Smart Pay - Résumé des paiements du bien',
+  shareText:'Prix du bien : {price}\nRemise : {pct}% ({discount})\nTotal après remise : {net}\nApport : {dpPct}% = {dp}\nSolde restant : {remaining}\nPlan de paiement : {freq} pendant {years} ans\nNombre d’échéances : {count}\nMontant de chaque échéance : {installment}\n*Estimation hors entretien, frais et paiements supplémentaires.*'
+ }
+};
+let currentLang='ar';
+function applyLanguage(lang){
+ currentLang=translations[lang]?lang:'ar';
+ const t=translations[currentLang];
+ document.documentElement.lang=currentLang;document.documentElement.dir=t.dir;
+ document.body.dir=t.dir;
+ Object.keys(t).forEach(k=>{const el=$(k);if(el && typeof t[k]==='string' && !['dir','priceLabel','resultsHeading'].includes(k)) el.textContent=t[k]});
+ // Keep emojis and inline hints in the price label.
+ $('priceLabel').childNodes[0].textContent=t.priceLabel+' ';
+ $('priceHint').textContent=t.priceHint;
+ // Translate preset labels and all visible option lists.
+ for(const id of ['pricePreset','dpPreset','discountPreset','yearsPreset']){
+  const sel=$(id);
+  if(sel.options.length) sel.options[0].textContent=t.custom;
+ }
+ const priceNames={
+  '5000000':['5 million','5 millions'], '10000000':['10 million','10 millions'],
+  '15000000':['15 million','15 millions'],'20000000':['20 million','20 millions'],
+  '30000000':['30 million','30 millions'],'40000000':['40 million','40 millions'],
+  '50000000':['50 million','50 millions'],'60000000':['60 million','60 millions'],
+  '70000000':['70 million','70 millions'],'80000000':['80 million','80 millions'],
+  '90000000':['90 million','90 millions'],'100000000':['100 million','100 millions'],
+  '150000000':['150 million','150 millions'],'200000000':['200 million','200 millions'],
+  '250000000':['250 million','250 millions'],'300000000':['300 million','300 millions'],
+  '400000000':['400 million','400 millions'],'500000000':['500 million','500 millions'],
+  '600000000':['600 million','600 millions'],'700000000':['700 million','700 millions'],
+  '800000000':['800 million','800 millions'],'900000000':['900 million','900 millions'],
+  '1000000000':['1 billion','1 milliard']
+ };
+ for(const opt of $('pricePreset').options){if(priceNames[opt.value]) opt.textContent=currentLang==='ar'?(Number(opt.value)>=1000000000?'مليار جنيه':(Number(opt.value)/1000000)+' مليون'):priceNames[opt.value][currentLang==='fr'?1:0];}
+ const pctOpts=Array.from({length:101},(_,i)=>i/2);
+ for(const id of ['dpPreset','discountPreset']){
+  for(const opt of $(id).options){if(opt.value!==''){const n=Number(opt.value);opt.textContent=(Number.isInteger(n)?String(n):String(n).replace('.',','))+'%';}}
+ }
+ for(const opt of $('yearsPreset').options){if(opt.value!=='')opt.textContent=currentLang==='ar'?opt.value+(Number(opt.value)===2?' سنة':' سنين'):currentLang==='fr'?opt.value+' ans':opt.value+' years';}
+ const freq=$('frequency');
+ freq.options[0].textContent=t.freqQuarter;freq.options[1].textContent=t.freqHalf;freq.options[2].textContent=t.freqYear;
+ $('price').placeholder=currentLang==='ar'?'اكتب السعر بالجنيه':currentLang==='fr'?'Saisir le prix en EGP':'Enter price in EGP';
+ $('dp').setAttribute('aria-label',t.dpLabel);$('discount').setAttribute('aria-label',t.discountLabel);$('years').setAttribute('aria-label',t.yearsLabel);
+ document.title=currentLang==='ar'?'Smart Pay | حاسبة الأقساط العقارية':currentLang==='fr'?'Smart Pay | Calculateur immobilier':'Smart Pay | Installment Calculator';
+ calculate();
+}
+const baseCalculate=calculate;
+calculate=function(){
+ baseCalculate();
+ if(!translations || !$('scheduleBody')) return;
+ const t=translations[currentLang];
+ const price=num('price'),dpPct=num('dp'),discPct=num('discount'),years=num('years'),freq=num('frequency');
+ if(!Number.isFinite(price)||price<=0||dpPct<0||dpPct>50||discPct<0||discPct>100||years<1||years>40){$('error').textContent=t.error;return;}
+ const discount=price*discPct/100,net=price-discount,dp=net*dpPct/100,remaining=net-dp,count=Math.round(years*freq),installment=count?remaining/count:0;
+ $('error').textContent=t.error;
+ const ftxt=freq===4?t.quarterly:freq===2?t.halfyear:t.yearly;
+ $('rDiscountSub').textContent=discPct+'% '+t.discountBasis;
+ $('rDpSub').textContent=dpPct+'% '+t.dpBasis;
+ $('rInstallmentSub').textContent=count+' '+t.installmentUnit+' • '+ftxt;
+ const body=$('scheduleBody');body.innerHTML='';let paid=dp;
+ for(let i=1;i<=count;i++){
+  paid+=installment;const tr=document.createElement('tr');
+  const when=freq===4?t.afterMonth.replace('{n}',i*3):freq===2?t.afterMonth.replace('{n}',i*6):t.afterYear.replace('{n}',i);
+  [i,when,fmt(installment),fmt(Math.min(paid,net))].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.appendChild(td)});body.appendChild(tr);
+ }
+ $('scheduleNote').textContent=t.scheduleNote.replace('{count}',count).replace('{total}',fmt(net));
+ lastSummary=t.shareTitle+'\n'+t.shareText
+ .replace('{price}',fmt(price)).replace('{pct}',discPct).replace('{discount}',fmt(discount))
+ .replace('{net}',fmt(net)).replace('{dpPct}',dpPct).replace('{dp}',fmt(dp))
+ .replace('{remaining}',fmt(remaining)).replace('{freq}',ftxt).replace('{years}',years)
+ .replace('{count}',count).replace('{installment}',fmt(installment));
+};
+$('language').addEventListener('change',e=>applyLanguage(e.target.value));
+
+applyLanguage('ar');
+</script>
+</body></html>
